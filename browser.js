@@ -20,6 +20,7 @@ persona.set(who);
 button.addEventListener('click', function () {
     if (!persona.id) {
         persona.identify();
+    } else {
+        persona.unidentify();
     }
-    else persona.unidentify();
 });
