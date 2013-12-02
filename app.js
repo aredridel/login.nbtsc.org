@@ -5,13 +5,17 @@ var ecstatic = require('ecstatic')(__dirname + '/static');
 
 var persona = require('persona-id')({audience: 'https://login.nbtsc.org'});
 
-var sessions = {};
+var level = require('level');
+var sessions = level('sessions.db');
+
 persona.on('create', function (sid, id) {
-    sessions[sid] = id.email;
+    console.warn("create", sid, id);
+    sessions.put(sid, JSON.stringify(id));
 });
 
 persona.on('destroy', function (sid) {
-    delete sessions[sid];
+    console.warn("destroy", sid);
+    sessions.del(sid);
 });
 
 var server = http.createServer(function (req, res) {
@@ -20,12 +24,22 @@ var server = http.createServer(function (req, res) {
         persona.handle(req, res);
     } else if (req.url == '' || req.url == '/') {
         var sid = persona.getId(req);
+        if (sid) {
+            sessions.get(sid, serve);
+        } else {
+            serve();
+        }
+    } else ecstatic(req, res)
+
+    function serve(err, session) {
+        if (err) throw err;
+        if (session) session = JSON.parse(session);
         res.writeHead(200, { "Content-Type": "text/html" });
         fs.createReadStream(__dirname + '/static/index.html')
             .pipe(hyperstream({ '#whoami': session ? session.email : '' }))
             .pipe(res)
         ;
-    } else ecstatic(req, res)
+    }
 });
 
 server.listen(5000);
