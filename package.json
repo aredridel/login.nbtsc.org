@@ -2,11 +2,11 @@
   "name": "login.nbtsc.org",
   "version": "0.0.0",
   "dependencies": {
-    "ecstatic": "~0.4.12",
-    "persona-id": "~0.2.0",
-    "hyperstream": "~0.3.1",
     "browserify": "~2.35.4",
-    "level": "~0.18.0"
+    "ecstatic": "~0.4.12",
+    "hyperstream": "~0.3.1",
+    "level": "^2.1.1",
+    "persona-id": "~0.2.0"
   },
   "scripts": {
     "build": "browserify -d browser.js -o public/bundle.js"
