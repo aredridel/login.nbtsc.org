@@ -9,6 +9,6 @@
     "persona-id": "~0.2.0"
   },
   "scripts": {
-    "build": "browserify -d browser.js -o public/bundle.js"
+    "prepare": "browserify -d browser.js -o public/bundle.js"
   }
 }
